@@ -7,6 +7,7 @@ export default [
         require: 'readonly',   // Define Node.js globals as read-only
         module: 'readonly',
         process: 'readonly',
+        console: 'readonly',   // Define console as read-only global
       },
     },
     rules: {
