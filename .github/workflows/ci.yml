@@ -28,6 +28,7 @@ jobs:
       - name: Lint code
         run: npm run lint
 
+      # Uncomment if you want to run tests
       # - name: Run tests
       #   run: npm run test
 
@@ -54,6 +55,26 @@ jobs:
           docker build -t rsubramani470/distributed-task-scheduler .
           docker push rsubramani470/distributed-task-scheduler
 
-      - name: Deploy to Kubernetes
+      - name: Set up kind (Kubernetes in Docker)
         run: |
-          kubectl apply -f kubernetes/deployment.yaml --validate=false
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/latest/kind-linux-amd64
+          chmod +x ./kind
+          sudo mv ./kind /usr/local/bin/kind
+
+      - name: Create Kubernetes cluster
+        run: kind create cluster
+
+      - name: Set kubectl context to kind
+        run: kubectl cluster-info --context kind-kind
+
+      - name: Deploy to kind Kubernetes cluster
+        run: |
+          kubectl apply -f kubernetes/deployment.yaml
+          
+      - name: Verify deployment
+        run: |
+          kubectl rollout status deployment/scheduler-api
+
+      - name: Delete kind cluster
+        run: kind delete cluster
+
