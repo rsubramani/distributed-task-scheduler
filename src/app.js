@@ -5,7 +5,9 @@ const Task = require('./models/Task');
 const app = express();
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+// Ensure a MongoDB connection string is provided
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/scheduler';
+mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.get('/', (req, res) => {
     res.send('Task Scheduler API');
@@ -23,7 +25,9 @@ app.get('/tasks', async (req, res) => {
     res.send(tasks);
 });
 
-app.listen(5000, () => {
+// Start server, but export the server instance
+const server = app.listen(5000, () => {
     console.log('Server running on port 5000');
 });
-        
+
+module.exports = { app, server };  // Export both app and server
