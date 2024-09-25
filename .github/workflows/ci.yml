@@ -51,8 +51,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t your-dockerhub-username/scheduler-api .
-          docker push your-dockerhub-username/scheduler-api
+          docker build -t rsubramani470/distributed-task-scheduler .
+          docker push rsubramani470/distributed-task-scheduler
 
       - name: Deploy to Kubernetes
         run: |
